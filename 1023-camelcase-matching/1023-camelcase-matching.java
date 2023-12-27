@@ -1,25 +1,34 @@
 class Solution {
     public List<Boolean> camelMatch(String[] queries, String pattern) {
-      List<Boolean> list = new ArrayList<>();
-
-      for (var q : queries) {
-         int index = 0;
-         boolean flag = true;
-         for (var c : q.toCharArray()) {
-            if(index < pattern.length() && c == pattern.charAt(index)){
-               index++;
-               continue;
+        char[] pat = pattern.toCharArray();
+        List<Boolean> list = new ArrayList<>();
+        
+        for(String s : queries){
+            char[] c = s.toCharArray();
+			
+            int x = 0;
+			
+            boolean flag = true, extra = false;
+            for(int i = 0; i<c.length; i++){
+				
+                if(extra || c[i]!=pat[x]){
+					
+                    if(c[i]>=65 && c[i]<=90){
+                        flag = false;
+                        break;
+                    }
+                }
+				
+				else{
+                    x++;
+                    extra = x>=pat.length;
+                }
             }
-            if(c >= 'A' && c <= 'Z'){
-               if(index >= pattern.length() || c != pattern.charAt(index)){
-                  flag = false;
-                  break;
-               }
-            }
-         }
-         flag = flag && index == pattern.length();
-         list.add(flag);
-      }
-      return list;
+			
+            flag = flag && x==pat.length;
+            list.add(flag);
+        }
+        
+        return list;
     }
 }
