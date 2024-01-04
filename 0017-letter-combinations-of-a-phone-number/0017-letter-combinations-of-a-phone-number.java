@@ -1,42 +1,44 @@
 class Solution {
+    private Map<Character, String> digitToLetters = new HashMap<>();
+    private List<String> resultList = new ArrayList<>();
+
     public List<String> letterCombinations(String digits) {
-        ArrayList<String> list = new ArrayList<>();
-        if(digits.isEmpty()) return list;
-        pad("",digits,list);
-        return list;
+        if (digits == null || digits.length() == 0) {
+            return resultList;
+        }
+
+        digitToLetters.put('2', "abc");
+        digitToLetters.put('3', "def");
+        digitToLetters.put('4', "ghi");
+        digitToLetters.put('5', "jkl");
+        digitToLetters.put('6', "mno");
+        digitToLetters.put('7', "pqrs");
+        digitToLetters.put('8', "tuv");
+        digitToLetters.put('9', "wxyz");
+
+        generateCombinations(digits, 0, new StringBuilder());
+
+        return resultList;
+
+
     }
-    public void pad(String p, String up,ArrayList<String> list){
-        if(up.isEmpty()){
-            list.add(p);
+
+
+    private void generateCombinations(String digits, int currentIndex, StringBuilder currentCombination) {
+        if (currentIndex == digits.length()) {
+            resultList.add(currentCombination.toString());
             return;
         }
-        int digit = up.charAt(0)-'0';
 
-        if(digit == 7){
-            for (int i = 0; i < 4; i++) {
-                char ch = (char)('a'+15+i);
-                pad(p+ch, up.substring(1),list);
-            }
-        }
+        char currentDigit = digits.charAt(currentIndex);
+        String letterOptions = digitToLetters.get(currentDigit);
 
-        else if(digit == 8){
-            for (int i = 0; i < 3; i++) {
-                char ch = (char)('a'+19+i);
-                pad(p+ch, up.substring(1),list);
-            }
-        }
-
-        else if(digit == 9){
-            for (int i = 0; i < 4; i++) {
-                char ch = (char)('a'+22+i);
-                pad(p+ch, up.substring(1),list);
-            }
-        }
-
-        else{
-            for (int i = (digit-2)*3; i < ((digit-1)*3); i++) {
-                char ch = (char)('a'+i);
-                pad(p+ch, up.substring(1),list);
+        if (letterOptions != null) {
+            for (int i = 0; i < letterOptions.length(); i++) {
+                char letter = letterOptions.charAt(i);
+                currentCombination.append(letter);
+                generateCombinations(digits, currentIndex + 1, currentCombination);
+                currentCombination.deleteCharAt(currentCombination.length() - 1);
             }
         }
     }
